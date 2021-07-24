@@ -1,0 +1,133 @@
+
+class maxHeap{
+    public:
+    int heap_size;
+    int capacity;
+    int *hash;
+
+    maxHeap(int cap){
+        heap_size = 0;
+        capacity = cap;
+        hash = new int[cap];
+    }
+
+    int parent(int i ){
+        return (i-1)/2;
+    }
+
+    int left(int i){
+        return 2*i+1;
+    }
+
+    int right(int i){
+        return 2*i+2;
+    }
+    
+    int getMax(){
+        return hash[0];
+    }
+
+
+    void insertKey(int key){
+        if(heap_size == capacity){
+            return ;
+        }else{
+            heap_size++;
+            hash[heap_size-1] = key;
+            int i = heap_size-1;
+
+            while(i != 0 and hash[parent(i)] < hash[i]){
+                swap(hash[parent(i)] , hash[i]);
+                i = parent(i);
+            }
+        }
+
+    }
+
+
+    void deleteKey(int key , int i){
+        hash[i] = key;
+        while(i!=0 and hash[parent(i)] < hash[i]){
+            swap(hash[i] , hash[parent(i)]);
+            i = parent(i);
+        }
+    }
+
+
+    void deleteInd(int i){
+        deleteKey(INT_MIN , i);
+        extractMax();
+    }
+
+
+    int extractMax(){
+
+        if(heap_size <= 0){
+            return INT_MIN;
+        }
+        
+        if(heap_size == 1){
+            heap_size--;
+            //hash[0] = INT_MIN;
+            return hash[0];
+        }
+        
+        int root = hash[0];
+
+        hash[0] = hash[heap_size-1];
+
+        heap_size--;
+
+        maxHeapify(0);
+
+        return root;
+        
+    }
+
+
+    void maxHeapify(int i){
+
+        int leftChild = 2*i+1;
+        int rightChild = 2*i+2;
+        int largest = i;
+
+        if(leftChild < heap_size and hash[largest] < hash[leftChild]){
+            largest = leftChild;
+        }
+
+        if(rightChild < heap_size and hash[largest] < hash[rightChild]){
+            largest = rightChild;
+        }
+
+        if(i != largest){
+            swap(hash[largest] , hash[i]);
+            maxHeapify(largest);
+        }
+
+    }
+
+};
+/*      // sample code of how to use it
+
+void solve(){    
+
+    int n;
+    cin>>n;
+
+    vector<int> a(n,0);
+
+    loop(i,0,n)
+    cin>>a[i];
+
+    maxHeap mxhp(n);
+
+    loop(i,0,n){
+        mxhp.insertKey(a[i]);
+    }
+
+    while(mxhp.heap_size != 0){
+        cout<<mxhp.extractMax()<<" ";
+    }
+    
+
+}*/

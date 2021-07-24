@@ -1,0 +1,130 @@
+
+//written by Yagyesh Tripathi
+
+class minHeap{
+    public :
+    int *hash;
+    int capacity;
+    int heap_size;
+
+    minHeap(int cap){
+        heap_size = 0;
+        capacity = cap;
+        hash =new int[cap];
+    }
+
+    int parent(int i){
+        return (i-1)/2;
+    }
+
+    int left(int i){
+        return 2*i+1;
+    }
+
+    int right(int i){
+        return 2*i+2;
+    }
+
+    int getMin(){
+        return hash[0];
+    }
+
+    void insertKey(int key){
+        if(heap_size == capacity){
+            cout<<"Overflow"<<endl;
+            return ;
+        }else{
+            heap_size++;
+            int i = heap_size-1;
+            hash[i] = key;
+            while(i!=0 and hash[parent(i)] > hash[i]){
+                swap(hash[parent(i)] , hash[i]);
+                i = parent(i);
+            }
+        }
+    }
+
+
+    void deleteKey(int i  , int new_key){
+        hash[i] = new_key;
+        while(i!=0 and hash[parent(i)] > hash[i]){
+            swap(hash[parent(i)] , hash[i]);
+            i = parent(i);
+        }
+    }
+
+    void deleteInd(int i){
+        deleteKey(i , INT_MAX);
+        extractMin();
+    }
+
+    int extractMin(){
+        if(heap_size <= 0){
+            return INT_MAX;
+        }
+        if(heap_size == 1){
+            heap_size--;
+            return hash[0];
+        }
+
+
+        int root = hash[0];
+        hash[0] = hash[heap_size-1];
+
+        heap_size--;
+
+        minHeapify(0);
+
+        return root;
+        
+    }
+
+    void minHeapify(int i){
+        int leftChild = 2*i+1;
+        int rightChild = 2*i+2;
+        int smallest = i;
+
+        if(leftChild < heap_size and hash[leftChild] > hash[smallest]){
+            smallest = leftChild;
+        }
+
+        if(rightChild < heap_size and hash[smallest] < hash[rightChild]){
+            smallest = rightChild;
+        }
+
+        if(smallest != i){
+            swap(hash[smallest] , hash[i]);
+            minHeapify(smallest);
+        }
+
+    }
+
+
+};
+
+
+/*     // sample code of how to use it
+
+void solve(){    
+
+    int n;
+    cin>>n;
+
+    vector<int> a(n,0);
+
+    loop(i,0,n)
+    cin>>a[i];
+
+    minHeap mhp(n);
+
+    loop(i,0,n){
+        mhp.insertKey(a[i]);
+    }
+
+    while(mhp.heap_size != 0){
+        cout<<mhp.extractMin()<<" ";
+    }
+    
+
+}
+*/
